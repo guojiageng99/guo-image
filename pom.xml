@@ -172,7 +172,6 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>com.gjg.guopicturebackend.GuoPictureBackendApplication</mainClass>
-                    <skip>true</skip>
                 </configuration>
                 <executions>
                     <execution>
