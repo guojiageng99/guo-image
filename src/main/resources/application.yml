@@ -1,5 +1,5 @@
 server:
-  port: 8123
+  port: 9123
   servlet:
     context-path: /api
     # cookie 30 天过期
@@ -10,13 +10,19 @@ spring:
   application:
     name: guo-picture-backend
   profiles:
-    active: prod
+    active: local
   # Redis 配置
   redis:
-    database: 0
-    host: 192.168.204.129
+    host: 49.232.171.218        # 因为用了 SSH 隧道，所以是 localhost
     port: 6379
-    timeout: 5000
+    password: 123456   # 你在 redis.conf 中设置的密码
+    timeout: 2000ms
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: -1ms
   # session 配置
   session:
     store-type: redis
@@ -31,38 +37,38 @@ spring:
   # 数据库配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/yu_picture
+    url: jdbc:mysql://49.232.171.218:3306/yu_picture
     username: root
-    password: password01!
+    password: 123456
 
 
-  # 空间图片分表
-  shardingsphere:
-    datasource:
-      names: yu_picture
-      yu_picture:
-        type: com.zaxxer.hikari.HikariDataSource
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://localhost:3306/yu_picture
-        username: root
-        password: password01!
-    rules:
-      sharding:
-        tables:
-          picture:
-            actual-data-nodes: yu_picture.picture  # 动态分表
-            table-strategy:
-              standard:
-                sharding-column: spaceId
-                sharding-algorithm-name: picture_sharding_algorithm  # 使用自定义分片算法
-        sharding-algorithms:
-          picture_sharding_algorithm:
-            type: CLASS_BASED
-            props:
-              strategy: standard
-              algorithmClassName: com.gjg.guopicturebackend.manager.sharding.PictureShardingAlgorithm
-    props:
-      sql-show: true
+#  # 空间图片分表
+#  shardingsphere:
+#    datasource:
+#      names: yu_picture
+#      yu_picture:
+#        type: com.zaxxer.hikari.HikariDataSource
+#        driver-class-name: com.mysql.cj.jdbc.Driver
+#        url: jdbc:mysql://49.232.171.218:3306/yu_picture
+#        username: root
+#        password: 123456
+#    rules:
+#      sharding:
+#        tables:
+#          picture:
+#            actual-data-nodes: yu_picture.picture  # 动态分表
+#            table-strategy:
+#              standard:
+#                sharding-column: spaceId
+#                sharding-algorithm-name: picture_sharding_algorithm  # 使用自定义分片算法
+#        sharding-algorithms:
+#          picture_sharding_algorithm:
+#            type: CLASS_BASED
+#            props:
+#              strategy: standard
+#              algorithmClassName: com.gjg.guopicturebackend.manager.sharding.PictureShardingAlgorithm
+#    props:
+#      sql-show: true
 
 
 
